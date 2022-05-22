@@ -24,6 +24,7 @@ char **get_paths(char **env)
 {
 	int i;
 	int j;
+	char *paths;
 
 	i = 0;
 	while(env[i])
