@@ -13,22 +13,28 @@ void ft_pipex(t_pipedata *pipedata, char **env)
 {
 	int fd[2];
 	int fp[2];
+	char c;
+	int r;
 
-	fd[0] = open(pipedata->paths[0], O_RDWR);
-	fd[1] = open(pipedata->paths[1], O_RDWR);
+	fd[0] = open(pipedata->files[0], O_RDWR);
+	fd[1] = open(pipedata->files[1], O_RDWR);
 	if(pipe(fp) < 0)
 		ft_error();
 	if(fork() == 0)
 	{
+		close(fp[0]);
 		dup2(fd[0], 0);
 		dup2(fp[1], 1);
 		execve(pipedata->commands_paths[0],pipedata->commands[0].command, env);
+		close(fp[1]);
 	}
 	else
 	{
+		close(fp[1]);
 		dup2(fp[0], 0);
 		dup2(fd[1], 1);
 		execve(pipedata->commands_paths[1],pipedata->commands[1].command, env);
+		close(fp[0]);
 	}
 }
 
