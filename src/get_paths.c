@@ -15,11 +15,6 @@ int ft_is_path(char *env)
 	return (1);
 }
 
-int	ft_get_path_index(char **env)
-{
-	return -1;
-}
-
 char **get_paths(char **env)
 {
 	int i;

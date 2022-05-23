@@ -15,6 +15,7 @@ typedef struct pipedata{
 	t_command *commands;
 	char **paths;
 	char **files;
+	char **commands_paths;
 	int	command_len;
 } t_pipedata;
 
