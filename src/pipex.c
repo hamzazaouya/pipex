@@ -6,18 +6,19 @@ void ft_init(int argc, char **argv, char **env, t_pipedata *pipedata)
 	pipedata->files = ft_check_files(argc, argv);
 	pipedata->commands = get_command(argv, pipedata->command_len);
 	pipedata->paths = get_paths(env);
-	ft_check_commands(pipedata);
+	//ft_check_commands(pipedata);
 }
 
 void ft_pipex(t_pipedata *pipedata, char **env)
 {
 	int fd[2];
 	int fp[2];
-	char c;
-	int r;
+	int	i;
+	int id;
 
+	i = 0;
 	fd[0] = open(pipedata->files[0], O_RDWR);
-	fd[1] = open(pipedata->files[1], O_RDWR);
+	fd[1] = open(pipedata->files[1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if(pipe(fp) < 0)
 		ft_error();
 	if(fork() == 0)
@@ -60,12 +61,6 @@ int main(int argc, char **argv, char **env)
 	// while(i < 2)
 	// {
 	// 	printf("%s\n", pipedata.files[i]);
-	// 	i++;
-	// }
-	// i = 0;
-	// while(i < 2)
-	// {
-	// 	printf("%s\n", pipedata.commands_paths[i]);
 	// 	i++;
 	// }
 }

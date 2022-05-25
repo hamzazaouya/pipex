@@ -5,6 +5,7 @@ t_command *get_command(char **argv, int size)
 	t_command *commands;
 	int i;
 	int j;
+	int len;
 	char *slash;
 
 	i = 0;
