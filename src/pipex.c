@@ -2,65 +2,98 @@
 
 void ft_init(int argc, char **argv, char **env, t_pipedata *pipedata)
 {
-	pipedata->command_len = argc - 3;
-	pipedata->files = ft_check_files(argc, argv);
-	pipedata->commands = get_command(argv, pipedata->command_len);
-	pipedata->paths = get_paths(env);
-	//ft_check_commands(pipedata);
+	pipedata->files_ds = get_files(argc, argv);
+	dup2(pipedata->files_ds[0], 1);
+	printf("Hello mother fucker ksdfjosodifsdf\n");
+	// pipedata->paths = get_paths(env);
+	// pipedata->argv = argv;
+	// pipedata->argc = argc;
+	// pipedata->env = env;
+	// pipedata->cmd_num = argc - 3;
+	// pipedata->pipe_num = argc - 4;
+	// pipedata->pipes = get_pipes(argc - 4);
 }
 
-void ft_pipex(t_pipedata *pipedata, char **env)
-{
-	int fd[2];
-	int fp[2];
-	int	i;
-	int id;
+// void ft_pipex(t_pipedata *pipedata)
+// {
+// 	int i;
+// 	int	id;
+// 	int j;
+// 	int p;
+// 	int k;
+// 	char c;
 
-	i = 0;
-	fd[0] = open(pipedata->files[0], O_RDWR);
-	fd[1] = open(pipedata->files[1], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if(pipe(fp) < 0)
-		ft_error();
-	if(fork() == 0)
-	{
-		close(fp[0]);
-		dup2(fd[0], 0);
-		dup2(fp[1], 1);
-		execve(pipedata->commands_paths[0],pipedata->commands[0].command, env);
-		close(fp[1]);
-	}
-	else
-	{
-		close(fp[1]);
-		dup2(fp[0], 0);
-		dup2(fd[1], 1);
-		execve(pipedata->commands_paths[1],pipedata->commands[1].command, env);
-		close(fp[0]);
-	}
-}
+// 	i = 2;
+// 	while(i < pipedata->argc - 1)
+// 	{
+// 		p = i - 2;
+// 		id = fork();
+// 		if(id == 0)
+// 		{
+// 			pipedata->command = command(pipedata, pipedata->argv[i]);
+// 			if(pipedata->command != NULL)
+// 			{
+// 				if(i == 2)
+// 				{
+// 					//read from infile and right in firest pipe;
+// 					j = 0;
+// 					close(pipedata->files_ds[1]);
+// 					while(j < pipedata->pipe_num)
+// 					{
+// 						close(pipedata->pipes[j][0]);
+// 						if(j != p)
+// 							close(pipedata->pipes[j][1]);
+// 						j++;
+// 						p++;
+// 					}
+// 					dup2(pipedata->files_ds[0], 0);
+// 					dup2(pipedata->pipes[p][1], 1);
+// 					execve(pipedata->command_path, pipedata->command, pipedata->env);
+// 				}
+// 				else if(i == pipedata->argc - 2)
+// 				{
+// 					j = 0;
+// 					close(pipedata->files_ds[0]);
+// 					while(j < pipedata->pipe_num)
+// 					{
+// 						close(pipedata->pipes[j][1]);
+// 						if(j != p - 1)
+// 							close(pipedata->pipes[j][0]);
+// 						j++;
+// 						p++;
+// 					}
+// 					dup2(pipedata->files_ds[1], 1);
+// 					printf("Hello\n");
+// 					dup2(pipedata->pipes[p - 1][0], 0);
+// 					k = 0;
+// 					while(read(0, &c, 1))
+// 					{
+// 						printf("%c\n", c);
+// 					}
+// 					execve(pipedata->command_path, pipedata->command, pipedata->env);
+// 				}	
+// 			}
+// 			return ;
+// 		}
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while(i < pipedata->cmd_num)
+// 	{
+// 		wait(NULL);
+// 		i++;
+// 	}
+// }
 
 int main(int argc, char **argv, char **env)
 {
 	t_pipedata pipedata;
 
-	ft_init(argc, argv, env, &pipedata);
-	ft_pipex(&pipedata, env);
-	// int i = 0;
-	// int j;
-	// while(pipedata.commands[i].command)
-	// {
-	// 	j = 0;
-	// 	while(pipedata.commands[i].command[j])
-	// 	{
-	// 		printf("%s\n", pipedata.commands[i].command[j]);
-	// 		j++;
-	// 	}
-	// 	i++;
-	// }
-	// i = 0;
-	// while(i < 2)
-	// {
-	// 	printf("%s\n", pipedata.files[i]);
-	// 	i++;
-	// }
+	if(argc >= 5)
+	{
+		ft_init(argc, argv, env, &pipedata);
+		// ft_pipex(&pipedata);
+	}
+	else
+		ft_error(1);
 }

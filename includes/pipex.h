@@ -12,17 +12,23 @@ typedef struct commands{
 } t_command;
 
 typedef struct pipedata{
-	t_command *commands;
+	char **argv;
+	int cmd_num;
+	int	 argc;
+	char **env;
+	int	 **pipes;
 	char **paths;
-	char **files;
-	char **commands_paths;
-	int	command_len;
+	int		*files_ds;
+	char **command;
+	char *command_path;
+	int pipe_num;
 } t_pipedata;
 
+char **command(t_pipedata *pipedata, char *cmd);
+int *get_files(int argc, char **argv);
+int check_file(char *file_name, int file_num);
 char **get_paths(char **env);
-t_command	*get_command(char **argv, int size);
-char		**ft_check_files(int argc, char **argv);
-void		ft_error();
-void		ft_check_commands(t_pipedata *pipedata);
+int	**get_pipes(int num);
+void ft_error(int num);
 
 #endif

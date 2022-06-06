@@ -19,7 +19,7 @@ char **get_paths(char **env)
 {
 	int i;
 	int j;
-	char *paths;
+	char **paths;
 
 	i = 0;
 	while(env[i])
@@ -28,5 +28,29 @@ char **get_paths(char **env)
 			break ;
 		i++;
 	}
-	return (ft_split(env[i] + 5, ':'));
+	paths = ft_split(env[i] + 5, ':');
+	i = 0;
+	while(paths[i])
+	{
+		paths[i] = ft_strjoin(paths[i], "/");
+		i++;
+	}
+	return (paths);
+}
+
+int	**get_pipes(int num)
+{
+	int i;
+	int **pipes;
+
+	i = 0;
+	pipes = (int **)malloc(sizeof(int *) * num);
+	while (i < num)
+	{
+		pipes[i] = (int *)malloc(sizeof(int) * 2);
+		if(pipe(pipes[i]) < 0)
+			ft_error(4);
+		i++;
+	}
+	return (pipes);
 }
