@@ -22,7 +22,7 @@ char **command(t_pipedata *pipedata, char *cmd)
 	while(pipedata->paths[i])
 	{
 		path = ft_strjoin(pipedata->paths[i], command[0]);
-		checker = access(path, F_OK);
+		checker = access(path, X_OK);
 		if(!checker)
 		{
 			pipedata->command_path = path;
@@ -32,9 +32,6 @@ char **command(t_pipedata *pipedata, char *cmd)
 		i++;
 	}
 	if(checker == -1)
-	{
-		ft_error(2);
-		return NULL;
-	}
+		ft_error(cmd);
 	return command;
 }

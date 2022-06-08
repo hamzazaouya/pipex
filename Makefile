@@ -1,6 +1,6 @@
 NAME = pipex
 HEADER = pipex.h
-SOURCES = pipex.c get_paths.c get_command.c get_files.c
+SOURCES = pipex.c get_paths.c get_command.c get_files.c exicute.c
 SRC_PATH = src
 OBJ_PATH  = objs
 OBJ_PATH_B = objs_b

@@ -1,15 +1,9 @@
 #include "../includes/pipex.h"
 
-void ft_error(int num)
+void ft_error(char *str)
 {
-	if(num == 1)
-		write(1, "Argument less than 4\n", ft_strlen("Argument less than 4\n"));
-	else if (num == 2)
-		write(1, "Command not found\n", ft_strlen("command not found\n"));
-	else if (num == 3)
-		write(1, "No such file or directory\n", ft_strlen("No such file or directory\n"));
-	else if(num == 4)
-		write(1, "Broken pipe\n", ft_strlen("Broken pipe\n"));
+	perror(str);
+	exit(0);
 }
 
 char **get_files(int argc, char **argv)

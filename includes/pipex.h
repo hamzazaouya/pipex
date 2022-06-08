@@ -29,6 +29,7 @@ char **get_files(int argc, char **argv);
 int check_file(char *file_name, int file_num);
 char **get_paths(char **env);
 int	**get_pipes(int num);
-void ft_error(int num);
+void ft_error(char *str);
+void ft_pipex(t_pipedata *pipedata);
 
 #endif

@@ -49,7 +49,7 @@ int	**get_pipes(int num)
 	{
 		pipes[i] = (int *)malloc(sizeof(int) * 2);
 		if(pipe(pipes[i]) < 0)
-			ft_error(4);
+			ft_error("");
 		i++;
 	}
 	return (pipes);
