@@ -1,37 +1,87 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_command.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hazaouya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/08 09:38:21 by hazaouya          #+#    #+#             */
+/*   Updated: 2022/06/08 09:42:39 by hazaouya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/pipex.h"
 
-char  **get_command(char *cmd)
+char	**get_command(char *cmd)
 {
-	char **command;
-	int i;
-	int len;
+	char	**command;
+	int		i;
+	int		len;
 
 	command = ft_split(cmd, ' ');
-	return command;
+	return (command);
 }
 
-char **command(t_pipedata *pipedata, char *cmd)
+int	command_with_path(t_pipedata *pipedata, char **command)
 {
 	int		i;
 	int		checker;
 	char	*path;
-	char	**command;
 
 	i = 0;
-	command = get_command(cmd);
-	while(pipedata->paths[i])
+	checker = 1;
+	path = ft_strchr(command[0], '/');
+	if (path)
+	{
+		checker = access(path, X_OK);
+		if (!checker)
+			pipedata->command_path = path;
+	}
+	return (checker);
+}
+
+int	command_without_path(t_pipedata *pipedata, char **command)
+{
+	int		i;
+	int		checker;
+	char	*path;
+
+	i = 0;
+	while (pipedata->paths[i])
 	{
 		path = ft_strjoin(pipedata->paths[i], command[0]);
 		checker = access(path, X_OK);
-		if(!checker)
+		if (!checker)
 		{
 			pipedata->command_path = path;
-			break;
+			break ;
 		}
 		free (path);
 		i++;
 	}
-	if(checker == -1)
-		ft_error(cmd);
-	return command;
+	return (checker);
+}
+
+char	**command(t_pipedata *pipedata, char *cmd)
+{
+	int		checker;
+	char	**command;
+
+	checker = 1;
+	command = get_command(cmd);
+	if (!pipedata->paths)
+		ft_error_cmd(command[0], 2);
+	else
+	{
+		checker = command_with_path(pipedata, command);
+		if (checker == -1)
+			perror(command[0]);
+		if (checker == 1)
+		{
+			checker = command_without_path(pipedata, command);
+			if (checker == -1)
+				ft_error_cmd(command[0], 1);
+		}
+	}
+	return (command);
 }

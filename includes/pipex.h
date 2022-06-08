@@ -31,5 +31,6 @@ char **get_paths(char **env);
 int	**get_pipes(int num);
 void ft_error(char *str);
 void ft_pipex(t_pipedata *pipedata);
-
+void ft_error_cmd(char *str, int num);
+void	ft_wait(t_pipedata *pipedata);
 #endif

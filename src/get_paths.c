@@ -1,36 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_paths.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hazaouya <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/08 09:25:19 by hazaouya          #+#    #+#             */
+/*   Updated: 2022/06/08 09:36:12 by hazaouya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/pipex.h"
 
-int ft_is_path(char *env)
+int	ft_is_path(char *env)
 {
-	int i;
+	int		i;
+	char	*path;
 
-	char path[] = "PATH";
+	path = (char *) malloc(sizeof(char) * 5);
+	ft_strlcpy(path, "PATH", 5);
 	i = 0;
-	while(i < 4)
+	while (i < 4)
 	{
-		if(env[i] != path[i])
+		if (env[i] != path[i])
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-char **get_paths(char **env)
+char	**get_paths(char **env)
 {
-	int i;
-	int j;
-	char **paths;
+	int		i;
+	int		j;
+	char	**paths;
 
 	i = 0;
-	while(env[i])
+	paths = NULL;
+	while (env[i])
 	{
-		if(ft_is_path(env[i]))
+		if (ft_is_path(env[i]))
 			break ;
 		i++;
 	}
-	paths = ft_split(env[i] + 5, ':');
+	if (env[i])
+		paths = ft_split(env[i] + 5, ':');
 	i = 0;
-	while(paths[i])
+	while (paths && paths[i])
 	{
 		paths[i] = ft_strjoin(paths[i], "/");
 		i++;
@@ -40,16 +56,16 @@ char **get_paths(char **env)
 
 int	**get_pipes(int num)
 {
-	int i;
-	int **pipes;
+	int		i;
+	int		**pipes;
 
 	i = 0;
 	pipes = (int **)malloc(sizeof(int *) * num);
 	while (i < num)
 	{
 		pipes[i] = (int *)malloc(sizeof(int) * 2);
-		if(pipe(pipes[i]) < 0)
-			ft_error("");
+		if (pipe(pipes[i]) < 0)
+			perror("");
 		i++;
 	}
 	return (pipes);

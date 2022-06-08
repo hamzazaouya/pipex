@@ -12,14 +12,37 @@
 
 #include "../includes/pipex.h"
 
-char	**get_files(int argc, char **argv)
+void	ft_error_cmd(char *str, int num)
 {
-	char	**files_name;
-	int		i;
+	write(1, str, ft_strlen(str));
+	write(1, ": ", 2);
+	if (num == 1)
+	{
+		write(1, "command not found\n", ft_strlen("command not found\n"));
+		exit(0);
+	}
+	else if (num == 2)
+	{
+		write(1, "No such file or directory\n"\
+				, ft_strlen("No such file or directory\n"));
+		exit(127);
+	}
+}
+
+void	ft_error(char *str)
+{
+	perror(str);
+	exit(0);
+}
+
+void	ft_wait(t_pipedata *pipedata)
+{
+	int	i;
 
 	i = 0;
-	files_name = (char **)ft_calloc(sizeof(char *), 2);
-	files_name[0] = argv[1];
-	files_name[1] = argv[argc - 1];
-	return (files_name);
+	while (i < pipedata->cmd_num)
+	{
+		wait(NULL);
+		i++;
+	}
 }
