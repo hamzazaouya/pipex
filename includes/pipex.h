@@ -21,6 +21,7 @@ typedef struct pipedata{
 	char **files_name;
 	char **command;
 	char *command_path;
+	char *limiter;
 	int pipe_num;
 } t_pipedata;
 
@@ -33,4 +34,11 @@ void ft_error(char *str);
 void ft_pipex(t_pipedata *pipedata);
 void ft_error_cmd(char *str, int num);
 void	ft_wait(t_pipedata *pipedata);
+char *ft_strchre(char *str, char c);
+void	ft_between_cmd(t_pipedata *pipedata, int p);
+void	ft_last_cmd(t_pipedata *pipedata, int p);
+void	ft_first_cmd(t_pipedata *pipedata, int p);
+void	ft_here_doc(t_pipedata *pipedata);
+char	*get_next_line(int fd);
+void	ft_close_pipes(t_pipedata *pipedata);
 #endif

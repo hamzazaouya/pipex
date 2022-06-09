@@ -12,25 +12,43 @@
 
 #include "../includes/pipex.h"
 
-void	ft_init(int argc, char **argv, char **env, t_pipedata *pipedata)
+void	ft_init_pipex(t_pipedata *pipedata)
 {
-	pipedata->files_name = get_files(argc, argv);
-	pipedata->paths = get_paths(env);
-	pipedata->argv = argv;
-	pipedata->argc = argc;
-	pipedata->env = env;
-	pipedata->cmd_num = argc - 3;
-	pipedata->pipe_num = argc - 4;
-	pipedata->pipes = get_pipes(argc - 4);
+	pipedata->files_name = get_files(pipedata->argc,pipedata->argv);
+	pipedata->paths = get_paths(pipedata->env);
+	pipedata->cmd_num = pipedata->argc - 3;
+	pipedata->pipe_num = pipedata->argc - 4;
+	pipedata->pipes = get_pipes(pipedata->pipe_num);
+}
+
+void	ft_init_heredoc(t_pipedata *pipedata)
+{
+	pipedata->limiter = pipedata->argv[2];
+	pipedata->files_name = get_files(pipedata->argc,pipedata->argv);
+	pipedata->paths = get_paths(pipedata->env);
+	pipedata->cmd_num = pipedata->argc - 3;
+	pipedata->pipe_num = pipedata->argc - 4;
+	pipedata->pipes = get_pipes(pipedata->pipe_num);
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	t_pipedata	pipedata;
+	int			k;
 
-	if (argc >= 5)
+	pipedata.argc = argc;
+	pipedata.argv = argv;
+	pipedata.env = env;
+	if(argc > 1)
+		k = ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc"));
+	if(!k)
 	{
-		ft_init(argc, argv, env, &pipedata);
+		ft_init_heredoc(&pipedata);
+		ft_here_doc(&pipedata);
+	}
+	else if (argc >= 5)
+	{
+		ft_init_pipex(&pipedata);
 		ft_pipex(&pipedata);
 	}
 	else

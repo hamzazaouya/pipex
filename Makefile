@@ -1,6 +1,6 @@
 NAME = pipex
 HEADER = pipex.h
-SOURCES = pipex.c get_paths.c get_command.c get_files.c exicute.c aide_funcs.c
+SOURCES = pipex.c get_paths.c get_command.c get_files.c exicute.c aide_funcs.c here_doc.c get_next_line_utils.c get_next_line.c
 SRC_PATH = src
 OBJ_PATH  = objs
 OBJ_PATH_B = objs_b
@@ -15,6 +15,7 @@ OBJS = $(addprefix $(OBJ_PATH)/,$(SOURCES:.c=.o))
 
 OBJS_B = $(addprefix $(OBJ_PATH_B)/,$(SOURCES_B:.c=.o))
 
+bonus : all
 
 all : $(OBJ_PATH) $(NAME)
 

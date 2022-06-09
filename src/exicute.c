@@ -49,7 +49,9 @@ void	ft_last_cmd(t_pipedata *pipedata, int p)
 	}
 	fd = open(pipedata->files_name[1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
+	{
 		ft_error(pipedata->files_name[1]);
+	}
 	pipedata->command = command(pipedata, pipedata->argv[p + 2]);
 	dup2(fd, 1);
 	dup2(pipedata->pipes[p - 1][0], 0);

@@ -30,7 +30,7 @@ int	command_with_path(t_pipedata *pipedata, char **command)
 
 	i = 0;
 	checker = 1;
-	path = ft_strchr(command[0], '/');
+	path = ft_strchre(command[0], '/');
 	if (path)
 	{
 		checker = access(path, X_OK);
