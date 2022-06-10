@@ -6,7 +6,7 @@
 /*   By: hazaouya <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 09:36:24 by hazaouya          #+#    #+#             */
-/*   Updated: 2022/06/08 09:38:14 by hazaouya         ###   ########.fr       */
+/*   Updated: 2022/06/10 10:50:54 by hazaouya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,27 @@ void	ft_error(char *str)
 	exit(0);
 }
 
-char *ft_strchre(char *str, char c)
+char	*ft_strchre(char *str, char c)
 {
-	int i;
-	int is_in;
+	int	i;
+	int	is_in;
 
 	i = 0;
 	is_in = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == c)
+		if (str[i] == c)
 			is_in = 1;
 		i++;
 	}
 	i = 0;
-	while(is_in && str[i])
+	while (is_in && str[i])
 	{
-		if(str[i] != ' ' || str[i] != '\t')
-			return str + i;
+		if (str[i] != ' ' || str[i] != '\t')
+			return (str + i);
 		i++;
 	}
-    return NULL;
+	return (NULL);
 }
 
 void	ft_wait(t_pipedata *pipedata)

@@ -1,21 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exicute.c                                          :+:      :+:    :+:   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hazaouya <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/08 09:42:47 by hazaouya          #+#    #+#             */
-/*   Updated: 2022/06/08 09:51:04 by hazaouya         ###   ########.fr       */
+/*   Created: 2022/06/10 10:50:59 by hazaouya          #+#    #+#             */
+/*   Updated: 2022/06/10 10:57:30 by hazaouya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void	ft_first_cmd(t_pipedata *pipedata, int p)
+void	ft_read_doc(t_pipedata *pipedata)
+{
+	int		j;
+	char	*limiter;
+
+	j = 0;
+	while (1)
+	{
+		limiter = get_next_line(0);
+		j = ft_strncmp(limiter, pipedata->limiter, \
+				ft_strlen(pipedata->limiter));
+		if (j)
+			write(pipedata->doc_pipe[1], limiter, ft_strlen(limiter));
+		else
+			break ;
+	}
+	close(pipedata->doc_pipe[1]);
+}
+
+void	ft_first_cmd_doc(t_pipedata *pipedata, int p)
 {
 	int	j;
-	int	fd;
 
 	j = 0;
 	while (j < pipedata->pipe_num)
@@ -25,16 +43,32 @@ void	ft_first_cmd(t_pipedata *pipedata, int p)
 			close(pipedata->pipes[j][1]);
 		j++;
 	}
-	fd = open(pipedata->files_name[0], O_RDWR);
-	if (fd == -1)
-		ft_error(pipedata->files_name[0]);
-	pipedata->command = command(pipedata, pipedata->argv[p + 2]);
-	dup2(fd, 0);
+	pipedata->command = command(pipedata, pipedata->argv[p + 3]);
+	dup2(pipedata->doc_pipe[0], 0);
 	dup2(pipedata->pipes[p][1], 1);
 	execve(pipedata->command_path, pipedata->command, pipedata->env);
 }
 
-void	ft_last_cmd(t_pipedata *pipedata, int p)
+void	ft_between_cmd_doc(t_pipedata *pipedata, int p)
+{
+	int	j;
+
+	j = 0;
+	while (j < pipedata->pipe_num)
+	{
+		if (j != p)
+			close(pipedata->pipes[j][1]);
+		if (j != p - 1)
+			close(pipedata->pipes[j][0]);
+		j++;
+	}
+	pipedata->command = command(pipedata, pipedata->argv[p + 3]);
+	dup2(pipedata->pipes[p][1], 1);
+	dup2(pipedata->pipes[p - 1][0], 0);
+	execve(pipedata->command_path, pipedata->command, pipedata->env);
+}
+
+void	ft_last_cmd_doc(t_pipedata *pipedata, int p)
 {
 	int	j;
 	int	fd;
@@ -47,73 +81,40 @@ void	ft_last_cmd(t_pipedata *pipedata, int p)
 			close(pipedata->pipes[j][0]);
 		j++;
 	}
-	fd = open(pipedata->files_name[1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	fd = open(pipedata->files_name[1], O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-	{
 		ft_error(pipedata->files_name[1]);
-	}
-	pipedata->command = command(pipedata, pipedata->argv[p + 2]);
+	pipedata->command = command(pipedata, pipedata->argv[p + 3]);
 	dup2(fd, 1);
 	dup2(pipedata->pipes[p - 1][0], 0);
 	execve(pipedata->command_path, pipedata->command, pipedata->env);
 }
 
-void	ft_between_cmd(t_pipedata *pipedata, int p)
-{
-	int	j;
-	int	fd;
-
-	j = 0;
-	while (j < pipedata->pipe_num)
-	{
-		if (j != p)
-			close(pipedata->pipes[j][1]);
-		if (j != p - 1)
-			close(pipedata->pipes[j][0]);
-		j++;
-	}
-	pipedata->command = command(pipedata, pipedata->argv[p + 2]);
-	dup2(pipedata->pipes[p][1], 1);
-	dup2(pipedata->pipes[p - 1][0], 0);
-	execve(pipedata->command_path, pipedata->command, pipedata->env);
-}
-
-void	ft_close_pipes(t_pipedata *pipedata)
+void	ft_here_doc(t_pipedata *pipedata)
 {
 	int	i;
-
-	i = 0;
-	while (i < pipedata->pipe_num)
-	{
-		close(pipedata->pipes[i][0]);
-		close(pipedata->pipes[i][1]);
-		i++;
-	}
-}
-
-void	ft_pipex(t_pipedata *pipedata)
-{
-	int	i;
-	int	id;
 	int	p;
 
-	i = 2;
+	i = 3;
+	pipedata->doc_pipe = (int *)malloc(sizeof(int) * 2);
+	pipe(pipedata->doc_pipe);
+	ft_read_doc(pipedata);
 	while (i < pipedata->argc - 1)
 	{
-		p = i - 2;
-		id = fork();
-		if (id == 0)
+		p = i - 3;
+		if (!fork())
 		{
-			if (i == 2)
-				ft_first_cmd(pipedata, p);
+			if (i == 3)
+				ft_first_cmd_doc(pipedata, p);
 			else if (i == pipedata->argc - 2)
-				ft_last_cmd(pipedata, p);
+				ft_last_cmd_doc(pipedata, p);
 			else
-				ft_between_cmd(pipedata, p);
+				ft_between_cmd_doc(pipedata, p);
 			return ;
 		}
 		i++;
 	}
+	close(pipedata->doc_pipe[0]);
 	ft_close_pipes(pipedata);
 	ft_wait(pipedata);
 }
