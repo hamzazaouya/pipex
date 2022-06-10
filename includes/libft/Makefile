@@ -10,8 +10,7 @@ BONUS_OBJS	:= $(BONUS:.c=.o)
 
 OBJS	= $(SRCS_OBJS) $(BONUS_OBJS)
 
-CFLAGS	= 
-
+CFLAGS = -Wall -Wextra -Werror 
 .PHONY:	all clean fclean re bonus
 
 all : $(NAME)
@@ -23,7 +22,7 @@ $(NAME) : $(SRCS_OBJS)
 	ar -rc $(NAME) $^
 
 %.o	: %.c
-	cc $(CFLAGS) -c $^ -o $@
+	cc $(CFLAGS) $(CFLAGS) -c $^ -o $@
 
 clean :
 	rm -f $(OBJS)

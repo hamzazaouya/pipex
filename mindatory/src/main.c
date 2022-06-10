@@ -39,19 +39,11 @@ int	main(int argc, char **argv, char **env)
 	t_pipedata	pipedata;
 	int			k;
 
+	k = 0;
 	pipedata.argc = argc;
 	pipedata.argv = argv;
 	pipedata.env = env;
-	if (argc > 1)
-	{
-		k = ft_strncmp(argv[1], "here_doc", ft_strlen("here_doc"));
-	}
-	if (!k && !argv[1][ft_strlen("here_doc")] && argc >= 6)
-	{
-		ft_init_heredoc(&pipedata);
-		ft_here_doc(&pipedata);
-	}
-	else if (argc >= 5)
+	if (argc >= 5)
 	{
 		ft_init_pipex(&pipedata);
 		ft_pipex(&pipedata);
